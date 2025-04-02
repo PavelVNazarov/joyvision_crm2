@@ -1,0 +1,35 @@
+<!--price_change_list.html-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Документы изменения цен</title>
+</head>
+<body>
+    <a href="{% url 'reports' accountant_id %}">Назад к отчетам</a>
+    <h1>Документы изменения цен</h1>
+    <p>{{ name }}</p>
+    <a href="{% url 'price_change_create' accountant_id %}">Создать новый</a>
+
+    <table border="1">
+        <tr>
+            <th>Дата</th>
+            <th>Тип</th>
+            <th>Основание</th>
+            <th>Учетчик</th>
+            <th>Действия</th>
+        </tr>
+        {% for doc in docs %}
+        <tr>
+            <td>{{ doc.created_at|date:"d.m.Y H:i" }}</td>
+            <td>{{ doc.get_change_type_display }}</td>
+            <td>{{ doc.reason|truncatechars:50 }}</td>
+            <td>{{ doc.accountant.name }}</td>
+            <td>
+                <a href="{% url 'price_change_delete' doc.id accountant_id %}">Удалить</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
+

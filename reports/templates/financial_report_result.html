@@ -1,0 +1,26 @@
+<!-- [file name]: templates/financial_report_result.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Финансовый отчет {{ start_date }} - {{ end_date }}</title>
+</head>
+<body>
+    <a href="{% url 'reports' accountant_id %}">Назад к отчетам</a>
+    <h1>Отчет за период: {{ start_date }} - {{ end_date }}</h1>
+
+    <h2>Прибыли (всего: {{ total_profit }})</h2>
+    <ul>
+        {% for p in profits %}
+        <li>{{ p.created_dat|date:"d.m.Y" }} - {{ p.profit_name }}: {{ p.sum }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Затраты (всего: {{ total_cost }})</h2>
+    <ul>
+        {% for c in costs %}
+        <li>{{ c.created_dat|date:"d.m.Y" }} - {{ c.cost_name }}: {{ c.sum }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+

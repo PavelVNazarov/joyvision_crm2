@@ -1,0 +1,20 @@
+<!-- people/templates/orders.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Страница заказов</title>
+</head>
+<body>
+    <h1>Страница заказов</h1>
+    <p>Добро пожаловать, {{ name }}!</p>
+    {% if receptionist_id %}
+        <a href="{% url 'new_order' receptionist_id %}">Новый заказ</a>
+    {% else %}
+        <a href="#">Новый заказ (недоступно)</a>
+    {% endif %}
+    <p> </p>
+    <a href="{% url 'order_list' receptionist_id  %}">Список заказов</a>
+    <p> </p>
+    <a href="{% url 'home' %}">Выйти</a>
+</body>
+</html>

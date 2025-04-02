@@ -1,0 +1,17 @@
+<!-- [file name]: templates/financial_report_form.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Финансовый отчет</title>
+</head>
+<body>
+    <h1>Сформировать отчет</h1>
+    <a href="{% url 'reports' accountant_id %}">Назад к отчетам</a>
+    <form method="post">
+        {% csrf_token %}
+        <label>Начальная дата: <input type="date" name="start_date" required></label>
+        <label>Конечная дата: <input type="date" name="end_date" required></label>
+        <button type="submit">Сформировать</button>
+    </form>
+</body>
+</html>

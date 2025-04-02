@@ -1,0 +1,23 @@
+<!-- reports_list.html-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Список заказов</title>
+</head>
+<body>
+    <h1>Список заказов</h1>
+    <p>Работает {{ name }}!</p>
+    <a href="{% url 'reports' accountant_id %}">Назад к отчетам</a>
+    <ul>
+        {% for order in orders %}
+            <li>
+                Заказ {{ order.order_number }} - Статус: {{ order.get_status_display }}
+                <a href="{% url 'reports_edit_order' order.id %}?accountant_id={{ accountant_id }}">Подробности</a>
+            </li>
+        {% empty %}
+            <li>Нет заказов.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+

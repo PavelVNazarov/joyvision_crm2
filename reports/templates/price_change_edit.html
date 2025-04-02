@@ -1,0 +1,70 @@
+<!-- price_change_edit.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+    <style>
+        .add-row { margin: 10px 0; }
+        .dynamic-form { margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    <a href="{% url 'price_change_list' accountant_id %}">← Назад к списку</a>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ doc_form.as_p }}
+
+        <h2>Изменяемые материалы</h2>
+        {{ item_formset.management_form }}
+        <div id="items-container">
+            {% for form in item_formset %}
+                <div class="dynamic-form">
+                    {{ form.material.label_tag }}
+                    {{ form.material }}
+                    {{ form.new_price.label_tag }}
+                    {{ form.new_price }}
+                    {% if form.DELETE %}
+                        {{ form.DELETE.label_tag }}
+                        {{ form.DELETE }}
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <button type="button" id="add-form" class="add-row">Добавить строку</button>
+        <button type="submit">Сохранить документ</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Клонирование формы
+            const container = document.getElementById('items-container');
+            const addButton = document.getElementById('add-form');
+            const totalForms = document.getElementById('id_items-TOTAL_FORMS');
+
+            addButton.addEventListener('click', () => {
+                const newForm = container.lastElementChild.cloneNode(true);
+                const formRegex = /items-(\d+)-/g;
+                const formIndex = parseInt(totalForms.value);
+
+                // Обновление индексов
+                newForm.innerHTML = newForm.innerHTML.replace(
+                    formRegex,
+                    `items-${formIndex}-`
+                );
+
+                // Сброс значений
+                newForm.querySelectorAll('input, select').forEach(el => {
+                    el.value = '';
+                    el.checked = false;
+                });
+
+                container.appendChild(newForm);
+                totalForms.value = formIndex + 1;
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!-- adjust_material.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Редактирование материала</title>
+    <style>
+        .hidden { display: none; }
+        .form-field { margin-bottom: 15px; }
+        .form-field label { display: block; font-weight: bold; }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Редактирование: {{ material.name }}</h1>
+    <a href="{% url 'warehouse_materials' storekeeper_id %}">← Назад</a>
+
+    <form method="post" style="margin-top: 20px; max-width: 600px;">
+        {% csrf_token %}
+
+        <!-- Видимые поля -->
+        <div class="form-field">
+            <label>Артикул:</label>
+            {{ form.article }}
+        </div>
+
+        <div class="form-field">
+            <label>Название:</label>
+            {{ form.name }}
+        </div>
+
+        <div class="form-field">
+            <label>Категория:</label>
+            {{ form.category }}
+        </div>
+
+        <div class="form-field">
+            <label>Тип системы:</label>
+            {{ form.system_type }}
+        </div>
+
+        <div class="form-field">
+            <label>Единица измерения:</label>
+            {{ form.unit }}
+        </div>
+
+        <div class="form-field">
+            <label>Примечания:</label>
+            {{ form.notes }}
+        </div>
+
+        <!-- Скрытые поля -->
+        {{ form.quantity }}
+        {{ form.purchase_cost }}
+        {{ form.sale_price }}
+
+        <button type="submit" style="margin-top: 20px; padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 4px;">
+            Сохранить
+        </button>
+    </form>
+</body>
+</html>
+

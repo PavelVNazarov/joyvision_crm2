@@ -1,0 +1,22 @@
+<!-- warehouse_list.html-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Список заказов</title>
+</head>
+<body>
+    <h1>Список заказов</h1>
+    <p>Работает {{ name }}!</p>
+    <a href="{% url 'warehouse' storekeeper_id %}">Назад на склад</a>
+    <ul>
+        {% for order in orders %}
+            <li>
+                Заказ {{ order.order_number }} - от: {{ order.created_at|date:"d F Y"  }}
+                <a href="{% url 'warehouse_edit_order' order.id %}?storekeeper_id={{ storekeeper_id }}">Обработать</a>
+            </li>
+        {% empty %}
+            <li>Нет заказов.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

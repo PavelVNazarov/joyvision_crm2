@@ -1,0 +1,18 @@
+<!-- [file name]: templates/doc_edit.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+</head>
+<body>
+    <a href="{% url 'reports' accountant_id %}">Назад к отчетам</a>
+    <h1>{{ title }}</h1>
+    <form method="post">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+        <button type="submit">Сохранить</button>
+        <a href="{% url 'reports' accountant_id %}">Отмена</a>
+    </form>
+</body>
+</html>

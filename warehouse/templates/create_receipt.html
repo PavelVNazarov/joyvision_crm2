@@ -1,0 +1,171 @@
+<!-- create_receipt.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Создание приходной накладной</title>
+    <style>
+        .autocomplete-list {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 1px solid #ddd;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        .autocomplete-item {
+            padding: 5px;
+            cursor: pointer;
+        }
+        .autocomplete-item:hover {
+            background: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Создание приходной накладной</h1>
+    <p>Кладовщик: {{ name }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <h2>Основные данные</h2>
+        {{ receipt_form.as_p }}
+
+        <h2>Поставляемые материалы</h2>
+        {{ item_formset.management_form }}
+        <table id="items-table" border="1" cellpadding="5">
+            <thead>
+                <tr>
+                    <th>Материал</th>
+                    <th>Количество</th>
+                    <th>Удалить</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for form in item_formset %}
+                <tr class="item-row">
+                    <td>
+                        <div class="autocomplete">
+                            {{ form.warehouse_item }}
+                            <div class="autocomplete-list"></div>
+                        </div>
+                        {% if form.warehouse_item.help_text %}
+                            <small class="form-text text-muted">{{ form.warehouse_item.help_text }}</small>
+                        {% endif %}
+                    </td>
+                    <td>{{ form.quantity }}</td>
+                    <td>{{ form.DELETE }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="button" id="add-row">Добавить строку</button>
+        <button type="button" id="remove-row">Удалить выбранные</button>
+        <br><br>
+        <div>Общая сумма: <span id="total-amount">0</span> руб.</div>
+        <button type="submit">Сохранить накладную</button>
+    </form>
+
+    <a href="{% url 'warehouse_list_receipt' storekeeper_id %}">Назад к списку</a>
+
+    <script>
+        // Динамическое добавление строк
+        document.getElementById('add-row').addEventListener('click', function() {
+            const tableBody = document.querySelector('#items-table tbody');
+            const totalForms = document.getElementById('id_form-TOTAL_FORMS');
+            const formRegex = /form-(\d+)-/g;
+
+            let nextIndex = parseInt(totalForms.value);
+            const newRow = tableBody.lastElementChild.cloneNode(true);
+
+            // Обновление индексов
+            Array.from(newRow.querySelectorAll('input, select, div')).forEach(element => {
+                if (element.name) element.name = element.name.replace(formRegex, `form-${nextIndex}-`);
+                if (element.id) element.id = element.id.replace(formRegex, `form-${nextIndex}-`);
+                element.value = '';
+                if (element.tagName === 'SELECT') element.selectedIndex = 0;
+            });
+
+            tableBody.appendChild(newRow);
+            totalForms.value = nextIndex + 1;
+            initAutocomplete(newRow);
+            attachQuantityListeners();
+        });
+
+        // Удаление строк
+        document.getElementById('remove-row').addEventListener('click', function() {
+            document.querySelectorAll('.item-row').forEach(row => {
+                if (row.querySelector('input[type="checkbox"]').checked) {
+                    row.remove();
+                }
+            });
+            updateTotalForms();
+        });
+
+        // Автоподсчет суммы
+        function calculateTotal() {
+            let total = 0;
+            document.querySelectorAll('.item-row').forEach(row => {
+                const itemId = row.querySelector('select').value;
+                const quantity = row.querySelector('input[type="number"]').value;
+                if (itemId && quantity) {
+                    const price = parseFloat(row.querySelector('select').options[row.querySelector('select').selectedIndex].dataset.price);
+                    total += price * quantity;
+                }
+            });
+            document.getElementById('total-amount').textContent = total.toFixed(2);
+        }
+
+        // Инициализация автодополнения
+        function initAutocomplete(row) {
+            const input = row.querySelector('select');
+            const list = row.querySelector('.autocomplete-list');
+
+            input.addEventListener('input', function(e) {
+                const search = e.target.value.toLowerCase();
+                list.innerHTML = '';
+
+                Array.from(input.options).forEach(option => {
+                    if (option.text.toLowerCase().includes(search)) {
+                        const div = document.createElement('div');
+                        div.className = 'autocomplete-item';
+                        div.textContent = option.text;
+                        div.onclick = () => {
+                            input.value = option.value;
+                            list.style.display = 'none';
+                            calculateTotal();
+                        };
+                        list.appendChild(div);
+                    }
+                });
+
+                list.style.display = 'block';
+            });
+
+            input.addEventListener('focus', () => list.style.display = 'block');
+            input.addEventListener('blur', () => setTimeout(() => list.style.display = 'none', 200));
+        }
+
+        // Обновление счетчика форм
+        function updateTotalForms() {
+            const forms = document.querySelectorAll('.item-row');
+            document.getElementById('id_form-TOTAL_FORMS').value = forms.length;
+            forms.forEach((form, index) => {
+                Array.from(form.querySelectorAll('input, select')).forEach(element => {
+                    element.name = element.name.replace(/form-\d+-/, `form-${index}-`);
+                    element.id = element.id.replace(/form-\d+-/, `form-${index}-`);
+                });
+            });
+        }
+
+        // Инициализация
+        document.querySelectorAll('.item-row').forEach(row => initAutocomplete(row));
+        document.querySelectorAll('select, input[type="number"]').forEach(element => {
+            element.addEventListener('change', calculateTotal);
+        });
+    </script>
+</body>
+</html>
+
+
+

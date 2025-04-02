@@ -1,0 +1,60 @@
+<!--reports/templates/reports_edit_order-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Заказ к оплате</title>
+</head>
+<body>
+    <h1>Заказ к оплате</h1>
+    <p>Работает {{ name }}!</p>
+
+
+    <div class="navigation">
+        {% if accountant_id %}
+            <a href="{% url 'reports' accountant_id %}">Назад к отчетам</a>
+        {% else %}
+            <a href="#">Назад к отчетам</a>
+        {% endif %}
+        <p></p>
+        <a href="{% url 'reports_list' accountant_id %}">Назад к списку заказов</a>
+    </div>
+
+    <div class="order-details">
+        <h2>Детали заказа №{{ order.order_number }}</h2>
+        <ul>
+            <li>Дата создания: {{ order.created_at|date:"d F Y" }}</li>
+            <li>Клиент: {{ order.client_name }}</li>
+            <li>Контакты: {{ order.client_contact }}</li>
+            <li>Текущий статус: {{ order.get_status_display }}</li>
+            <li>Дата завершения работ: {{ order.completed_at|date:"d F Y H:i" }}</li>
+        </ul>
+
+        <!-- Форма для редактирования комментария -->
+        <form method="post">
+            {% csrf_token %}
+            <div class="comment-section">
+                <h3>Комментарий к заказу:</h3>
+                {{ comment_form.comment }}
+                {% if comment_form.comment.errors %}
+                    <div class="error">{{ comment_form.comment.errors }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="send-button">
+                {% if order.status == 'completed' %}Обновить комментарий{% else %}Заказ оплачен{% endif %}
+            </button>
+        </form>
+
+        {% if order.invoice %}
+        <div class="invoice">
+            <h3>Расчетные данные</h3>
+            <a href="{% url 'invoice_detail' order.invoice.id %}">Посмотреть расчетный лист</a>
+            <p>Общая сумма: {{ order.invoice.total_sum }} руб.</p>
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>
+
+

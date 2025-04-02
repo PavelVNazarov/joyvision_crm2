@@ -1,0 +1,21 @@
+<!-- orders/templates/new_order.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новый заказ</title>
+</head>
+<body>
+    <h1>Создание нового заказа</h1>
+    <p>Работает: {{ name }}!</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" name="action" value="save">Сохранить черновик</button>
+        <button type="submit" name="action" value="accept">Принять заказ</button>
+    </form>
+    <a href="{% url 'orders' receptionist_id %}">Назад к заказам</a>  <!-- Ссылка для возврата к списку заказов -->
+</body>
+</html>
+

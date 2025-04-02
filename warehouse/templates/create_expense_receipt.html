@@ -1,0 +1,119 @@
+<!-- create_expense_receipt.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Создание расходной накладной</title>
+    <style>
+        .error { color: red; }
+        .autocomplete { position: relative; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <h1>Создать расходную накладную</h1>
+    <p>Кладовщик: {{ name }}</p>
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <h2>Комментарий</h2>
+        {{ comment_form.comment }}
+
+        <h2>Данные накладной</h2>
+        {{ expense_form.as_p }}
+
+        <h2>Материалы</h2>
+        {{ item_formset.management_form }}
+        <table id="items-table">
+            <thead>
+                <tr>
+                    <th>Материал</th>
+                    <th>Количество</th>
+                    <th>Цена</th>
+                    <th>Сумма</th>
+                    <th>Удалить</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for form in item_formset %}
+                    <tr class="item-row">
+                        <td>
+                            {{ form.warehouse_item }}
+                            {% if form.warehouse_item.errors %}
+                                <div class="error">{{ form.warehouse_item.errors }}</div>
+                            {% endif %}
+                        </td>
+                        <td>{{ form.quantity }}</td>
+                        <td>{{ form.unit_price }}</td>
+                        <td>{{ form.total_price }}</td>
+                        <td>{{ form.DELETE }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="button" id="add-row">Добавить строку</button>
+        <button type="submit">Сохранить</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Обновление цен при выборе материала
+            function updatePrices(selectElement) {
+                const row = selectElement.closest('.item-row');
+                const unitPrice = row.querySelector('[id$="-unit_price"]');
+                const totalPrice = row.querySelector('[id$="-total_price"]');
+                const quantity = row.querySelector('[id$="-quantity"]');
+
+                // Получаем цену из data-атрибута выбранного option
+                const selectedOption = selectElement.options[selectElement.selectedIndex];
+                const price = parseFloat(selectedOption.dataset.price) || 0;
+
+                unitPrice.value = price.toFixed(2);
+
+                // Обновляем сумму при изменении количества
+                quantity.oninput = () => {
+                    const qty = parseFloat(quantity.value) || 0;
+                    totalPrice.value = (qty * price).toFixed(2);
+                };
+                quantity.dispatchEvent(new Event('input'));
+            }
+
+            // Обработчик выбора материала
+            document.querySelector('#items-table').addEventListener('change', (e) => {
+                if (e.target.classList.contains('material-select')) {
+                    updatePrices(e.target);
+                }
+            });
+
+            // Добавление новой строки
+            document.getElementById('add-row').addEventListener('click', () => {
+                const totalForms = document.getElementById('id_items-TOTAL_FORMS');
+                const newIndex = parseInt(totalForms.value);
+                const newRow = document.querySelector('.item-row').cloneNode(true);
+
+                // Сброс значений
+                newRow.querySelectorAll('input, select').forEach(el => {
+                    el.value = '';
+                    if (el.name) el.name = el.name.replace(/-\d+-/, `-${newIndex}-`);
+                    if (el.id) el.id = el.id.replace(/-\d+-/, `-${newIndex}-`);
+                    el.classList.remove('is-invalid');
+                });
+
+                // Удаление сообщений об ошибках
+                newRow.querySelectorAll('.invalid-feedback').forEach(el => el.remove());
+
+                document.querySelector('#items-table tbody').appendChild(newRow);
+                totalForms.value = newIndex + 1;
+            });
+        });
+</script>
+</body>
+</html>

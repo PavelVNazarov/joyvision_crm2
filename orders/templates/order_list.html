@@ -1,0 +1,24 @@
+<!-- people/templates/order_list.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Список заказов</title>
+</head>
+<body>
+    <h1>Список заказов</h1>
+    <p>Работает {{ name }}!</p>
+    <a href="{% url 'orders' receptionist_id %}">Назад к заказам</a>
+    <ul>
+        {% for order in orders %}
+            <li>
+                Заказ {{ order.order_number }} - от: {{ order.created_at|date:"d F Y"  }}
+                <a href="{% url 'edit_order' order.id receptionist_id %}">Редактировать</a>
+                <a href="{% url 'delete_order' order.id receptionist_id  %}" onclick="return confirm('Вы действительно хотите удалить заказ {{ order.order_number }}?')">Удалить</a>
+            </li>
+        {% empty %}
+            <li>Нет заказов.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+

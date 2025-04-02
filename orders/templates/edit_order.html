@@ -1,0 +1,20 @@
+<!-- orders/templates/edit_order.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Редактирование заказа</title>
+</head>
+<body>
+    <h1>Редактирование заказа</h1>
+    <p>Работает {{ receptionist_name }}!</p>  <!-- Отображаем имя приемщика -->
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" name="action" value="save">Сохранить изменения</button>
+        <button type="submit" name="action" value="accept">Принять заказ</button>
+    </form>
+    <a href="{% url 'order_list' receptionist_id %}">Назад к списку заказов</a>
+</body>
+</html>
+
+

@@ -1,0 +1,50 @@
+<!-- warehouse_materials.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Материалы на складе</title>
+</head>
+<body>
+    <h1>Управление материалами</h1>
+    <p>Кладовщик: {{ name }}</p>
+
+    <a href="{% url 'add_material' storekeeper_id %}">Добавить новый материал</a>
+    <p> </p>
+    <a href="{% url 'warehouse' storekeeper_id %}">Назад на склад</a>
+
+    <h2>Список материалов:</h2>
+    <table border="1">
+        <tr>
+            <th>Артикул</th>
+            <th>Название</th>
+            <th>Категория</th>
+            <th>Тип системы</th>
+            <th>Ед. изм.</th>
+            <th>Количество</th>
+            <th>Цена продажи</th>
+            <th>Описание</th>
+            <th>Действия</th>
+        </tr>
+        {% for material in materials %}
+        <tr>
+            <td>{{ material.article }}</td>
+            <td>{{ material.name }}</td>
+            <td>{{ material.category|default:"-" }}</td>
+            <td>{{ material.system_type|default:"-" }}</td>
+            <td>{{ material.unit }}</td>
+            <td>{{ material.quantity }}</td>
+            <td>{{ material.sale_price }}</td>
+            <td>{{ material.notes }}</td>
+            <td>
+                <a href="{% url 'adjust_material' storekeeper_id material.id %}">Корректировать</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="8">Нет материалов на складе</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
+

@@ -1,0 +1,35 @@
+<!-- [file name]: templates/profit_docs_list.html -->
+<!-- [file content begin] -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Документы прибылей</title>
+</head>
+<body>
+    <h1>Документы прибылей</h1>
+    <p>Работает {{ name }}!</p>
+    <a href="{% url 'reports' accountant_id %}">Назад</a>
+    <p></p>
+    <a href="{% url 'profit_doc_create' accountant_id %}">Создать новый</a>
+
+    <table border="1">
+        <tr>
+            <th>Дата</th>
+            <th>Наименование</th>
+            <th>Сумма</th>
+            <th>Действия</th>
+        </tr>
+        {% for doc in docs %}
+        <tr>
+            <!--<td>{{ doc.created_dat|date:"d.m.Y" }}</td>-->
+            <td>{{ doc.profit_name }}</td>
+            <td>{{ doc.sum }}</td>
+            <td>
+                <a href="{% url 'profit_doc_edit' doc.id accountant_id %}">Редактировать</a>
+                <a href="{% url 'profit_doc_delete' doc.id accountant_id %}">Удалить</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

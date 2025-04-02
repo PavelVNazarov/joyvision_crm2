@@ -1,0 +1,72 @@
+<!-- warehouse/templates/warehouse_edit_order.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Заказ на складе</title>
+    <style>
+        .comment-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        .comment-section textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            min-height: 80px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Заказ на складе</h1>
+    <p>Работает {{ name }}!</p>
+    <div class="navigation">
+        <a href="{% url 'warehouse' storekeeper_id %}">Назад на склад</a>
+        <p> </p>
+        <a href="{% url 'warehouse_list' storekeeper_id %}">Назад к списку заказов</a>
+    </div>
+    <div class="order-details">
+        <h2>Детали заказа №{{ order.order_number }}</h2>
+        <ul>
+            <li>Дата создания: {{ order.created_at|date:"d F Y" }}</li>
+            <li>Клиент: {{ order.client_name }}</li>
+            <li>Контакты: {{ order.client_contact }}</li>
+            <li>Текущий статус: {{ order.get_status_display }}</li>
+            <li>Дата отправки на склад: {{ order.sent_to_warehouse_at|date:"d F Y" }}</li>
+        </ul>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <!-- Секция комментария ВНУТРИ ФОРМЫ -->
+            <div class="comment-section">
+                <h3>Комментарий к заказу:</h3>
+                <textarea name="comment"
+                        placeholder="Введите комментарий...">{{ order.comment|default_if_none:'' }}</textarea>
+            </div>
+
+            <h3>Материалы для заказа:</h3>
+            <ul>
+                {% for material in sufficient_materials %}
+                    <li style="color: green;">{{ material.material.name }} (достаточно: {{ material.quantity }})</li>
+                {% endfor %}
+                {% for material in insufficient_materials %}
+                    <li style="color: red;">{{ material.name }} (недостаточно: {{ material.needed }})</li>
+                {% endfor %}
+            </ul>
+
+            {% if insufficient_materials|length == 0 %}
+                <button type="submit" name="execute_order">Выполнить заказ</button>
+            {% else %}
+                <p>Не хватает следующих материалов для выполнения заказа:</p>
+                <ul>
+                    {% for material in insufficient_materials %}
+                        <li>{{ material.name }} (артикул: {{ material.article }}, необходимо: {{ material.needed }})</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!-- add_material.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Добавить материал</title>
+</head>
+<body>
+    <h1>Добавление нового материала</h1>
+    <p>Кладовщик: {{ name }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            {{ form.name.label_tag }} {{ form.name }}
+        </div>
+        <div>
+            {{ form.article.label_tag }} {{ form.article }}
+        </div>
+        <div>
+            {{ form.category.label_tag }} {{ form.category }}
+        </div>
+        <div>
+            {{ form.system_type.label_tag }} {{ form.system_type }}
+        </div>
+        <div>
+            {{ form.unit.label_tag }} {{ form.unit }}
+        </div>
+        <div>
+            {{ form.quantity.label_tag }} {{ form.quantity }}
+        </div>
+        <div>
+            {{ form.purchase_cost.label_tag }} {{ form.purchase_cost }}
+        </div>
+        <div>
+            {{ form.sale_price.label_tag }} {{ form.sale_price }}
+        </div>
+        <div>
+            {{ form.notes.label_tag }} {{ form.notes }}
+        </div>
+        <button type="submit">Сохранить</button>
+    </form>
+
+    <a href="{% url 'warehouse_materials' storekeeper_id %}">Назад к списку</a>
+</body>
+</html>
+

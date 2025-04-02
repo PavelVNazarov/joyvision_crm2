@@ -1,0 +1,39 @@
+<!-- warehouse_list_receipt.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Список накладных</title>
+</head>
+<body>
+    <h1>Приходные накладные</h1>
+    <p>Кладовщик: {{ name }}</p>
+    <a href="{% url 'warehouse' storekeeper_id %}">Назад на склад</a>
+    <p> </p>
+    <a href="{% url 'create_receipt' storekeeper_id %}">Новая поставка</a>
+    <p> </p>
+    <table border="1">
+        <tr>
+            <th>№</th>
+            <th>Дата</th>
+            <th>Поставщик</th>
+            <th>Материалы</th>
+            <th>Сумма</th>
+        </tr>
+        {% for receipt in receipts %}
+        <tr>
+            <td>{{ receipt.invoice_number }}</td>
+            <td>{{ receipt.delivery_date|date:"d.m.Y" }}</td>
+            <td>{{ receipt.supplier }}</td>
+            <td>
+                <ul>
+                    {% for item in receipt.items.all %}
+                    <li>{{ item.warehouse_item.name }} - {{ item.quantity }} шт.</li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td>{{ receipt.total_amount }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

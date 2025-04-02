@@ -1,0 +1,22 @@
+<!-- people/templates/reports.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Страница отчетов</title>
+</head>
+<body>
+    <h1>Страница отчетов</h1>
+    <p>Добро пожаловать, {{ name }}!</p>
+
+    <div>
+        <h2>Финансовые документы:</h2>
+        <a href="{% url 'profit_docs_list' accountant_id %}">Документы прибылей</a><br>
+        <a href="{% url 'cost_docs_list' accountant_id %}">Документы затрат</a><br>
+        <a href="{% url 'financial_reports' accountant_id %}">Сформировать отчет</a><br>
+        <a href="{% url 'price_change_list' accountant_id %}">Изменения цен</a><br>
+    </div>
+
+    <p><a href="{% url 'reports_list' accountant_id %}">Список заказов</a></p>
+    <p><a href="{% url 'home'%}">Выйти</a></p>
+</body>
+</html>

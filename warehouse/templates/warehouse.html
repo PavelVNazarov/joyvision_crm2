@@ -1,0 +1,19 @@
+<!-- people/templates/warehouse.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Страница склада</title>
+</head>
+<body>
+    <h1>Страница склада</h1>
+    <p>Добро пожаловать, {{ name }}!</p>
+    <p> </p>
+    <a href="{% url 'warehouse_list' storekeeper_id %}">Список заказов</a>
+    <p> </p>
+    <a href="{% url 'warehouse_list_receipt' storekeeper_id %}">Список поставок</a>
+    <p> </p>
+    <a href="{% url 'warehouse_materials' storekeeper_id %}">Управление материалами</a>
+    <p> </p>
+    <a href="{% url 'home'%}">Выйти</a>
+</body>
+</html>

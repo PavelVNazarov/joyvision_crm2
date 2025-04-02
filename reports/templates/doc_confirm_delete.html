@@ -1,0 +1,25 @@
+<!-- [file name]: templates/doc_confirm_delete.html -->
+<!-- [file content begin] -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Удаление документа</title>
+</head>
+<body>
+    <a href="{% url 'reports' accountant_id %}">Назад к отчетам</a>
+    <h1>Удалить документ?</h1>
+    <p>Дата: {{ doc.created_dat|date:"d.m.Y" }}</p>
+    <p>Наименование:
+        {% if doc.profit_name %}
+            {{ doc.profit_name }} (Прибыль)
+        {% else %}
+            {{ doc.cost_name }} (Затраты)
+        {% endif %}
+    </p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Удалить</button>
+        <a href="{% url 'reports' accountant_id %}">Отмена</a>
+    </form>
+</body>
+</html>
