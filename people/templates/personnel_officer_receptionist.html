@@ -1,0 +1,32 @@
+<!-- people/templates/personnel_officer_receptionist.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Панель кадровика</title>
+</head>
+<body>
+    <h1>Панель кадровиа</h1>
+    <h2>Приемщики</h2>
+    <ul>
+
+            {% for receptionist in receptionists %}
+                <li>
+                    <form method="post" action="{% url 'edit_receptionist' receptionist.id %}">
+                        {% csrf_token %}
+                        <p>Имя: {{ receptionist.name }}</p>
+                        <a href="{% url 'edit_receptionist' receptionist.id %}">Редактировать</a>
+                        <a href="{% url 'delete_receptionist' receptionist.id %}" onclick="return confirm('Вы действительно хотите удалить учетчика {{ receptionist.name }}?')">Удалить</a>
+
+                        <p> </p>
+                    </form>
+                </li>
+            {% empty %}
+                <li>нет работников</li>
+            {% endfor %}
+
+    </ul>
+    <a href="{% url 'add_receptionist' %}">Добавить приемщика</a>
+    <p> </p>
+    <a href="{% url 'personnel_officer_dashboard'%}">Назад</a>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!-- people/templates/personnel_officer_accountant.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Панель кадровика</title>
+</head>
+<body>
+    <h1>Панель кадровика</h1>
+    <h2>Учетчики</h2>
+    <ul>
+        {% if accountants %}
+            {% for accountant in accountants %}
+                <li>
+                    <form method="post" action="{% url 'edit_accountant' accountant.id %}">
+                        {% csrf_token %}
+                        <p>Имя: {{ accountant.name }}</p>
+                        <a href="{% url 'edit_accountant' accountant.id %}">Редактировать</a>
+                        <a href="{% url 'delete_accountant' accountant.id %}" onclick="return confirm('Вы действительно хотите удалить учетчика {{ accountant.name }}?')">Удалить</a>
+
+                        <p> </p>
+                    </form>
+                </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+    <a href="{% url 'add_accountant' %}">Добавить учетчика</a>
+    <p> </p>
+    <a href="{% url 'personnel_officer_dashboard'%}">Назад</a>
+</body>
+</html>
+

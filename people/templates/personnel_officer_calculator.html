@@ -1,0 +1,32 @@
+<!-- people/templates/personnel_officer_calculator.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Панель кадровика</title>
+</head>
+<body>
+    <h1>Панель кадровика</h1>
+    <h2>Расчетчики</h2>
+    <ul>
+        {% if calculators %}
+            {% for calculator in calculators %}
+                <li>
+                    <form method="post" action="{% url 'edit_calculator' calculator.id %}">
+                        {% csrf_token %}
+                        <p>Имя: {{ calculator.name }}</p>
+                        <a href="{% url 'edit_calculator' calculator.id %}">Редактировать</a>
+                        <a href="{% url 'delete_calculator' calculator.id %}" onclick="return confirm('Вы действительно хотите удалить учетчика {{ calculator.name }}?')">Удалить</a>
+
+                        <p> </p>
+                    </form>
+                </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+    <a href="{% url 'add_calculator' %}">Добавить расчетчика</a>
+    <p> </p>
+    <a href="{% url 'personnel_officer_dashboard'%}">Назад</a>
+</body>
+</html>
+
+

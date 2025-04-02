@@ -1,0 +1,40 @@
+<!-- people/templates/personnel_officer_dashboard.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Панель кадровика</title>
+</head>
+<body>
+    <h1>Панель кадровика</h1>
+    <h2>Приемщики</h2>
+    <a href="{% url 'personnel_officer_receptionist' %}">Смотреть список приемщиков</a>
+
+    <h2>Расчетчики</h2>
+    <a href="{% url 'personnel_officer_calculator' %}">Смотреть список расчетчиков</a>
+    <p> </p>
+
+    <h2>Кладовщики</h2>
+    <a href="{% url 'personnel_officer_storekeeper' %}">Смотреть список кладовщиков</a>
+    <p> </p>
+
+    <h2>Работяги</h2>
+    <a href="{% url 'personnel_officer_hard_worker' %}">Смотреть список работяг</a>
+    <p> </p>
+
+    <h2>Учетчики</h2>
+    <a href="{% url 'personnel_officer_accountant' %}">Смотреть список учетчиков</a>
+    <p> </p>
+
+    <h2>Заказы</h2>
+    <a href="{% url 'personnel_officer_order' %}">Смотреть список заказов</a>
+    <p> </p>
+
+    <h2>Поставки</h2>
+    <a href="{% url 'personnel_officer_receipt' %}">Смотреть список поставок</a>
+    <p> </p>
+
+    <a href="{% url 'home'%}">Выйти</a>
+</body>
+</html>
+
+

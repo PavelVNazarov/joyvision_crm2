@@ -1,0 +1,44 @@
+<!-- personnel_officer_order.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Список заказов</title>
+</head>
+<body>
+    <h1>Список заказов</h1>
+    <p>Работает {{ name }}!</p>
+    <a href="{% url 'personnel_officer_dashboard' %}">Назад</a>
+
+    <form method="get">
+    <td>Здесь поставьте галочки какие параметры поиска показывать</td>
+    <br>
+    <label><input type="checkbox" name="statuses" value="orders" {% if 'orders' in selected_statuses %}checked{% endif %}> Заказы</label>
+    <label><input type="checkbox" name="statuses" value="calculation" {% if 'calculation' in selected_statuses %}checked{% endif %}> На расчете</label>
+    <label><input type="checkbox" name="statuses" value="warehouse" {% if 'warehouse' in selected_statuses %}checked{% endif %}> На складе</label>
+    <label><input type="checkbox" name="statuses" value="workshop" {% if 'workshop' in selected_statuses %}checked{% endif %}> В цехе</label>
+    <label><input type="checkbox" name="statuses" value="reports" {% if 'reports' in selected_statuses %}checked{% endif %}> В ожидании оплаты</label>
+    <label><input type="checkbox" name="statuses" value="completed" {% if 'completed' in selected_statuses %}checked{% endif %}> Завершен</label>
+
+    <br>
+    <label>Начальная дата: <input type="date" name="start_date" value="{{ request.GET.start_date }}"></label>
+    <label>Конечная дата: <input type="date" name="end_date" value="{{ request.GET.end_date }}"></label>
+
+    <button type="submit">Применить</button>
+    </form>
+
+    <ul>
+        {% if orders %}
+            {% for order in orders %}
+                <li>
+                    Заказ {{ order.order_number }} - от: {{ order.created_at|date:"d F Y" }} - Статус: {{ order.get_status_display }}
+                    <a href="{% url 'personnel_officer_edit_order' order.id %}">Подробности</a>
+                </li>
+            {% endfor %}
+            <p>Общая сумма работ с {{ start_date }} по {{ end_date }} равна: {{ total_sum }} </p>
+        {% else %}
+            <li>Нет заказов.</li>
+        {% endif %}
+    </ul>
+</body>
+</html>
+

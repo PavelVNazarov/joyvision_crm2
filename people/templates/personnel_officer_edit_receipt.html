@@ -1,0 +1,36 @@
+<!--personnel_officer_edit_receipt-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Поставка</title>
+</head>
+<body>
+    <h1>Поставка</h1>
+    <p>Работает {{ name }}!</p>
+    <a href="{% url 'personnel_officer_dashboard' %}">На страницу всех списков</a>
+    <p></p>
+    <a href="{% url 'personnel_officer_receipt' %}">Назад к списку поставок</a>
+    <ul>
+        <li>Накладная № {{ receipt.invoice_number }}</li>
+        <li>Дата поставки: {{ receipt.delivery_date|date:"d F Y" }}</li>
+        <li>Имя поставщика: {{ receipt.supplier }}</li>
+        <li>Контактная информация поставщика: {{ receipt.supplier_contact }}</li>
+        <li>Комментарий: {{ receipt.comment }}</li>
+
+        <li>Имя кладовщика:
+            {% if receipt.storekeeper_name %}
+                {{ receipt.storekeeper_name.name }}
+            {% else %}
+                Не назначен
+            {% endif %}
+        </li>
+
+        <li>Итоговая сумма: {{ receipt.total_amount|default:"-" }}</li>
+        <p></p>
+        <a href="{% url 'admin_delete_receipt' receipt.id %}"
+           onclick="return confirm('Удалить поставку {{ receipt.receipt_number }}?')">
+           Удалить
+        </a>
+    </ul>
+</body>
+</html>

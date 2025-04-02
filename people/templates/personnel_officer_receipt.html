@@ -1,0 +1,37 @@
+<!--personnel_officer_receipt.html-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Список поставок</title>
+</head>
+<body>
+    <h1>Список поставок</h1>
+    <p>Работает {{ name }}!</p>
+    <a href="{% url 'personnel_officer_dashboard' %}">Назад</a>
+    <p> </p>
+    <form method="get">
+
+    <label>Начальная дата: <input type="date" name="start_date" value="{{ request.GET.start_date }}"></label>
+    <label>Конечная дата: <input type="date" name="end_date" value="{{ request.GET.end_date }}"></label>
+
+    <button type="submit">Применить</button>
+    </form>
+    <p> </p>
+    <ul>
+        {% if receipts %}
+            {% for receipt in receipts %}
+                <li>
+                    Накладная {{ receipt.invoice_number }} - Дата: {{ receipt.delivery_date|date:"d F Y" }} - Сумма: {{ receipt.total_amount }}
+                    <a href="{% url 'personnel_officer_edit_receipt' receipt.id %}">Подробности</a>
+                </li>
+            {% endfor %}
+            <p>Общая сумма оплаты за поставки с {{ start_date }} по {{ end_date }} равна: {{ total_sum }} </p>
+
+        {% else %}
+            <li>Нет поставок.</li>
+        {% endif %}
+    </ul>
+</body>
+</html>
+
+

@@ -1,0 +1,63 @@
+<!-- personnel_officer_edit_order.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Заказ</title>
+</head>
+<body>
+    <h1>Заказ</h1>
+    <p>Работает {{ receptionist_name }}!</p>
+    <a href="{% url 'personnel_officer_dashboard' %}">На страницу всех списков</a>
+    <p></p>
+    <a href="{% url 'personnel_officer_order' %}">Назад к списку заказов</a>
+    <ul>
+        <li>Заказ № {{ order.order_number }}</li>
+        <li>Дата создания: {{ order.created_at|date:"d F Y" }}</li>
+        <li>Имя клиента: {{ order.client_name }}</li>
+        <li>Контактная информация клиента: {{ order.client_contact }}</li>
+        <li>Комментарий: {{ order.comment }}</li>
+        <li>Статус: {{ order.get_status_display }}</li>
+        <li>Имя приемщика: {{ order.receptionist.name }}</li>  <!-- Доступ к имени через .name -->
+        <li>Дата отправки на расчет: {{ order.sent_to_calculation_at|date:"d F Y"|default:"-" }}</li>
+        <li>Имя расчетчика:
+            {% if order.calculator_name %}
+                {{ order.calculator_name.name }}  <!-- Проверка на наличие объекта -->
+            {% else %}
+                Не назначен
+            {% endif %}
+        </li>
+        <li>Дата отправки на склад: {{ order.sent_to_warehouse_at|date:"d F Y"|default:"-" }}</li>
+        <li>Имя кладовщика:
+            {% if order.storekeeper_name %}
+                {{ order.storekeeper_name.name }}
+            {% else %}
+                Не назначен
+            {% endif %}
+        </li>
+        <li>Дата отправки в цех: {{ order.sent_to_workshop_at|date:"d F Y"|default:"-" }}</li>
+        <li>Дата завершения работ: {{ order.completed_at|date:"d F Y"|default:"-" }}</li>
+        <li>Имя работяги:
+            {% if order.hard_worker_name %}
+                {{ order.hard_worker_name.name }}
+            {% else %}
+                Не назначен
+            {% endif %}
+        </li>
+        <li>Имя учетчика:
+            {% if order.accountant_name %}
+                {{ order.accountant_name.name }}
+            {% else %}
+                Не назначен
+            {% endif %}
+        </li>
+        <li>Дата оплаты: {{ order.paid_at|date:"d F Y"|default:"-" }}</li>
+        <li>Итоговая сумма: {{ order.total_sum|default:"-" }}</li>
+        <p></p>
+        <a href="{% url 'admin_delete_order' order.id %}"
+           onclick="return confirm('Удалить заказ {{ order.order_number }}?')">
+           Удалить
+        </a>
+    </ul>
+</body>
+</html>
+

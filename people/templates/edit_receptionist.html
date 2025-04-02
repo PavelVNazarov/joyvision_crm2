@@ -1,0 +1,32 @@
+<!-- templates/edit_receptionist.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактировать приемщика</title>
+</head>
+<body>
+    <h1>Редактировать приемщика</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="name">Имя:</label>
+        <input type="text" id="name" name="name" value="{{ receptionist.name }}" required>
+        <br>
+        <label for="login">Логин:</label>
+        <input type="text" id="login" name="login" value="{{ receptionist.login }}" required>
+        <br>
+        <label for="password">Пароль:</label>
+        <input type="text" id="password" name="password" value="{{ receptionist.password }}"required>
+        <br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="{{ receptionist.email }}" required>
+        <br>
+        <label for="role">Роль:</label>
+        <input type="text" id="role" name="role" value="{{ receptionist.role }}" required>
+        <br>
+        <button type="submit">Сохранить</button>
+    </form>
+    <a href="{% url 'personnel_officer_dashboard'%}">Назад</a>
+</body>
+</html>
+
