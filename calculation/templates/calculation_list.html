@@ -1,0 +1,22 @@
+<!-- calculation/templates/calculation_list.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Список заказов</title>
+</head>
+<body>
+    <h1>Список заказов</h1>
+    <p>Работает {{ name }}!</p>
+    <a href="{% url 'calculation' calculator_id %}">Назад к заказам</a>
+    <ul>
+        {% for order in orders %}
+            <li>
+                Заказ {{ order.order_number }} - от: {{ order.created_at|date:"d F Y"  }}
+                <a href="{% url 'edit_calculation' order.id %}?calculator_id={{ calculator_id }}">Редактировать</a>
+            </li>
+        {% empty %}
+            <li>Нет заказов.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

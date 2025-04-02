@@ -1,0 +1,120 @@
+<!-- calculation/templates/edit_calculation.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Расчет по заказу</title>
+    <style>
+        .container { max-width: 1200px; margin: 20px auto; padding: 20px; }
+        .order-header { margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #eee; }
+        .calculation-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .calculation-table th { background: #f5f5f5; padding: 12px; text-align: left; }
+        .calculation-table td { padding: 10px; border-bottom: 1px solid #ddd; }
+        .button-group { margin-top: 25px; display: flex; gap: 15px; }
+        .total-preview { font-size: 18px; padding: 15px; background: #f8f9fa; }
+        select, input { padding: 8px; width: 200px; }
+        .add-row { margin: 10px 0; }
+        .comment-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        .comment-section textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="order-header">
+            <h1>Расчет по заказу №{{ order.order_number }} от {{ order.created_at }}</h1>
+            <p>Ответственный: {{ name }}</p>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <!-- Секция комментария -->
+            <div class="comment-section">
+                <h3>Комментарий к заказу:</h3>
+                {{ comment_form.comment }}
+            </div>
+            <!-- Таблица материалов -->
+            <table class="calculation-table" id="materials-table">
+                <thead>
+                    <tr>
+                        <th>Материал</th>
+                        <th>Количество</th>
+                        <th>Скидка (руб)</th>
+                        <th>Удалить</th> <!-- Новая колонка для удаления -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {{ formset.management_form }}
+                    {% for form in formset %}
+                    <tr class="material-row">
+                        <td>{{ form.material }}</td>
+                        <td>{{ form.quantity }}</td>
+                        <td>{{ form.discount }}</td>
+                        <td>
+                            {% if forloop.last %}
+                                <button type="button" onclick="removeRow(this)">Удалить</button> <!-- Кнопка удаления для последнего материала -->
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <!-- Кнопки управления -->
+            <div class="button-group">
+                <button type="button" class="add-row" onclick="addMaterialRow()">+ Добавить материал</button>
+                <button type="submit" name="calculate" style="background: #17a2b8;">Предварительный расчет</button>
+                <button type="submit" name="save" style="background: #28a745;">Отправить расчет на склад</button>
+                <a href="{% url 'calculation_list' calculator_id %}" style="background: #6c757d;">← Назад к списку заказов</a>
+            </div>
+            {% if preview_total %}
+            <div class="total-preview">
+                Предварительная сумма: {{ preview_total }} ₽
+            </div>
+            {% endif %}
+        </form>
+    </div>
+    <script>
+        let formCount = {{ formset.total_form_count }};
+        function addMaterialRow() {
+            const table = document.getElementById('materials-table');
+            const newRow = table.insertRow(-1);
+            newRow.innerHTML = `
+                <td>
+                    <select name="calculations-${formCount}-material" id="id_calculations-${formCount}-material">
+                        {% for item in formset.empty_form.material.field.queryset %}
+                            <option value="{{ item.id }}">{{ item.name }} ({{ item.article }})</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <input type="number" name="calculations-${formCount}-quantity"
+                           id="id_calculations-${formCount}-quantity" min="1" value="1">
+                </td>
+                <td>
+                    <input type="number" name="calculations-${formCount}-discount"
+                           id="id_calculations-${formCount}-discount" min="0" value="0">
+                </td>
+                <td>
+                    <button type="button" onclick="removeRow(this)">Удалить</button> <!-- Кнопка удаления для новых материалов -->
+                </td>
+            `;
+            // Обновляем management form
+            document.getElementById('id_calculations-TOTAL_FORMS').value = ++formCount;
+        }
+
+        function removeRow(button) {
+            const row = button.closest('tr');
+            row.parentNode.removeChild(row);
+            // Обновляем количество форм в management form
+            document.getElementById('id_calculations-TOTAL_FORMS').value--;
+        }
+    </script>
+</body>
+</html>
+

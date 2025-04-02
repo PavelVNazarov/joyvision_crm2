@@ -1,0 +1,15 @@
+<!-- calculation/templates/calculation.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Страница расчета</title>
+</head>
+<body>
+    <h1>Страница расчета</h1>
+    <p>Добро пожаловать, {{ name }}!</p>
+    <p> </p>
+    <a href="{% url 'calculation_list' calculator_id %}">Список заказов</a>
+    <p> </p>
+    <a href="{% url 'home'%}">Выйти</a>
+</body>
+</html>

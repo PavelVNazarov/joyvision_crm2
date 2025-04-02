@@ -1,0 +1,52 @@
+<!-- workshop_edit_order.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Заказ</title>
+    <style>
+        .comment-section { margin-bottom: 20px; }
+        .comment-section textarea { width: 100%; height: 100px; }
+    </style>
+</head>
+<body>
+    <h1>Заказ</h1>
+    <p>Работает {{ name }}!</p>
+
+    <div class="navigation">
+        {% if hard_worker_id %}
+            <a href="{% url 'workshop' hard_worker_id %}">Назад в цех</a>
+        {% else %}
+            <a href="#">Назад в цех</a>
+        {% endif %}
+        <a href="{% url 'workshop_list' hard_worker_id %}">Назад к списку заказов</a>
+    </div>
+
+    <div class="order-details">
+        <h2>Детали заказа №{{ order.order_number }}</h2>
+        <ul>
+            <li>Дата создания: {{ order.created_at|date:"d F Y" }}</li>
+            <li>Клиент: {{ order.client_name }}</li>
+            <li>Контакты: {{ order.client_contact }}</li>
+            <li>Текущий статус: {{ order.get_status_display }}</li>
+            <li>Дата отправки в цех: {{ order.sent_to_workshop_at|date:"d F Y H:i"}}</li>
+        </ul>
+
+        <!-- Единая форма -->
+        <form method="post">
+            {% csrf_token %}
+            <div class="comment-section">
+                <h3>Комментарий к заказу:</h3>
+                {{ comment_form.comment }}
+                {% if comment_form.comment.errors %}
+                    <div class="error">{{ comment_form.comment.errors }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" name="complete_order" class="complete-button">
+                Заказ выполнен
+            </button>
+        </form>
+    </div>
+</body>
+</html>
+

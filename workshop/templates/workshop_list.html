@@ -1,0 +1,23 @@
+<!-- workshop_list.html-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Список заказов</title>
+</head>
+<body>
+    <h1>Список заказов</h1>
+    <p>Работает {{ name }}!</p>
+    <a href="{% url 'workshop' hard_worker_id %}">Назад в цех</a>
+    <ul>
+        {% for order in orders %}
+            <li>
+                Заказ {{ order.order_number }} - от: {{ order.created_at|date:"d F Y" }} - Статус: {{ order.get_status_display }}
+                <a href="{% url 'workshop_edit_order' order.id %}?hard_worker_id={{ hard_worker_id }}">Подробности</a>
+            </li>
+        {% empty %}
+            <li>Нет заказов.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+

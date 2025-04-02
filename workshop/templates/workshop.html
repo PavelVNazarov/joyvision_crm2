@@ -1,0 +1,15 @@
+<!-- people/templates/workshop.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Страница цеха</title>
+</head>
+<body>
+    <h1>Страница цеха</h1>
+    <p>Добро пожаловать, {{ name }}!</p>
+    <p> </p>
+    <a href="{% url 'workshop_list' hard_worker_id %}">Список заказов</a>
+    <p> </p>
+    <a href="{% url 'home'%}">Выйти</a>
+</body>
+</html>
